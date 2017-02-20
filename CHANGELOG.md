@@ -2,6 +2,7 @@
 
 FEATURES:
 
+ * **New Data Source:**  `openstack_images_image_v2` [GH-12097]
  * **New Resource:**  `aws_elastic_beanstalk_application_version` [GH-5770]
  * **New Resource:**  `openstack_images_image_v2` [GH-11942]
 
@@ -11,9 +12,10 @@ IMPROVEMENTS:
  * provider/aws: Allow aws_instances to be resized rather than forcing a new instance [GH-11998]
  * provider/datadog: add support for new host delay to the datadog_monitor resource [GH-11975]
  * provider/datadog: Upgrade to Datadog API v2 [GH-12098]
- * provider/google: Add support for maintenance window in `sql_database_instance` [GH-12042]
  * provider/fastly: Make Backends optional if used in VCL [GH-12025]
  * provider/fastly: Add support for custom `response_object` [GH-12032]
+ * provider/google: Add support for maintenance window in `sql_database_instance` [GH-12042]
+ * provider/google: google_project supports billing account [GH-11653]
  * provider/openstack: Don't allow floating IP and port [GH-12099]
  * provider/openstack: Enable HTTP Logging [GH-12089]
  * provider/random_id: Add prefix attribute [GH-12016]
@@ -27,8 +29,11 @@ Bug FIXES:
  * provider/aws: Use proper Set for source.Auth in resource_aws_codebuild_project [GH-11741]
  * provider/aws: aws_ecs_service should output service name along with err [GH-12072]
  * provider/aws: Add VRRP to allowed protocols in network ACL rules [GH-12107]
+ * provider/aws: Add owner_account option to aws_redshift_cluster [GH-12062]
+ * provider/aws: Update of inspector_assessment_target should use ARN not Name [GH-12115]
  * provider/cloudflare: add validation for proxied record types [GH-11993]
  * provider/google: make local_traffic_selector computed [GH-11631]
+ * provider/google: Write the raw disk encryption key in the state file to avoid diffs on plan [GH-12068]
 
 ## 0.8.7 (February 15, 2017)
 
