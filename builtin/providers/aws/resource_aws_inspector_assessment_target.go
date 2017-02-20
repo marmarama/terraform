@@ -19,16 +19,16 @@ func resourceAWSInspectorAssessmentTarget() *schema.Resource {
 		Delete: resourceAwsInspectorAssessmentTargetDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Required: true,
 			},
-			"arn": &schema.Schema{
+			"arn": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"resource_group_arn": &schema.Schema{
+			"resource_group_arn": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -96,7 +96,7 @@ func resourceAwsInspectorAssessmentTargetUpdate(d *schema.ResourceData, meta int
 
 	if d.HasChange("resource_group_arn") {
 		_, n := d.GetChange("resource_group_arn")
-		input.AssessmentTargetName = aws.String(n.(string))
+		input.AssessmentTargetArn = aws.String(n.(string))
 	}
 
 	_, err := conn.UpdateAssessmentTarget(&input)
