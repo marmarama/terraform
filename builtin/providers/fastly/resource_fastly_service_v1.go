@@ -188,17 +188,26 @@ func resourceServiceV1() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     "",
-							Description: "SSL certificate hostname",
+							Description: "Used for both SNI during the TLS handshake and to validate the cert.",
 						},
-						// UseSSL is something we want to support in the future, but
-						// requires SSL setup we don't yet have
-						// TODO: Provide all SSL fields from https://docs.fastly.com/api/config#backend
-						// "use_ssl": &schema.Schema{
-						// 	Type:        schema.TypeBool,
-						// 	Optional:    true,
-						// 	Default:     false,
-						// 	Description: "Whether or not to use SSL to reach the Backend",
-						// },
+						"ssl_cert_hostname": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "Overrides ssl_hostname, but only for cert verification. Does not affect SNI at all.",
+						},
+						"ssl_sni_hostname": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     "",
+							Description: "Overrides ssl_hostname, but only for SNI in the handshake. Does not affect cert validation at all.",
+						},
+						"use_ssl": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Whether or not to use SSL to reach the Backend",
+						},
 						"weight": {
 							Type:        schema.TypeInt,
 							Optional:    true,
@@ -647,8 +656,8 @@ func resourceServiceV1() *schema.Resource {
 						},
 						"request_condition": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Name of a request condition to apply.",
+							Optional:    true,
+							Description: "Name of a request condition to apply.  If you do not set a condition, it will always be applied.",
 						},
 						// Optional fields
 						"max_stale_age": {
@@ -1009,8 +1018,11 @@ func resourceServiceV1Update(d *schema.ResourceData, meta interface{}) error {
 					Name:                df["name"].(string),
 					Address:             df["address"].(string),
 					AutoLoadbalance:     gofastly.CBool(df["auto_loadbalance"].(bool)),
+					UseSSL:              gofastly.CBool(df["use_ssl"].(bool)),
 					SSLCheckCert:        gofastly.CBool(df["ssl_check_cert"].(bool)),
 					SSLHostname:         df["ssl_hostname"].(string),
+					SSLCertHostname:     df["ssl_cert_hostname"].(string),
+					SSLSNIHostname:      df["ssl_sni_hostname"].(string),
 					Shield:              df["shield"].(string),
 					Port:                uint(df["port"].(int)),
 					BetweenBytesTimeout: uint(df["between_bytes_timeout"].(int)),
@@ -1915,8 +1927,11 @@ func flattenBackends(backendList []*gofastly.Backend) []map[string]interface{} {
 			"max_conn":              int(b.MaxConn),
 			"port":                  int(b.Port),
 			"shield":                b.Shield,
+			"use_ssl":               gofastly.CBool(b.UseSSL),
 			"ssl_check_cert":        gofastly.CBool(b.SSLCheckCert),
 			"ssl_hostname":          b.SSLHostname,
+			"ssl_cert_hostname":     b.SSLCertHostname,
+			"ssl_sni_hostname":      b.SSLSNIHostname,
 			"weight":                int(b.Weight),
 			"request_condition":     b.RequestCondition,
 		}
