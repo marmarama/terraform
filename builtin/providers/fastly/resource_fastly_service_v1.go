@@ -250,13 +250,13 @@ func resourceServiceV1() *schema.Resource {
 							Default:     "",
 							Description: "Maximum allowed TLS version on SSL connections to this backend.",
 						},
-						"ssl_ciphers": {
-							Type:        schema.TypeList,
-              Elem:        &schema.Schema{Type: schema.TypeString},
-							Optional:    true,
-							Default:     [],
-							Description: "List of OpenSSL ciphers (see https://www.openssl.org/docs/manmaster/apps/ciphers.html for details)",
-						},
+						// "ssl_ciphers": {
+						// Type: schema.TypeString,
+						//              Elem:        &schema.Schema{Type: schema.TypeString},
+						// Optional:    true,
+						// Default:     "",
+						//Description: "List of OpenSSL ciphers (see https://www.openssl.org/docs/manmaster/apps/ciphers.html for details)",
+						//},
 					},
 				},
 			},
@@ -1081,7 +1081,7 @@ func resourceServiceV1Update(d *schema.ResourceData, meta interface{}) error {
 					SSLSNIHostname:      df["ssl_sni_hostname"].(string),
 					MinTLSVersion:       df["min_tls_version"].(string),
 					MaxTLSVersion:       df["max_tls_version"].(string),
-					SSLCiphers:          df["ssl_ciphers"].(string),
+					// SSLCiphers:          df["ssl_ciphers"].(string),
 				}
 
 				log.Printf("[DEBUG] Create Backend Opts: %#v", opts)
@@ -1990,7 +1990,7 @@ func flattenBackends(backendList []*gofastly.Backend) []map[string]interface{} {
 			"ssl_sni_hostname":      b.SSLSNIHostname,
 			"min_tls_version":       b.MinTLSVersion,
 			"max_tls_version":       b.MaxTLSVersion,
-			"ssl_ciphers":           b.SSLCiphers,
+			// "ssl_ciphers":           b.SSLCiphers,
 		}
 
 		bl = append(bl, nb)
